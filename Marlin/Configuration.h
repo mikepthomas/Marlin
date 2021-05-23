@@ -35,7 +35,7 @@
  *
  * Advanced settings can be found in Configuration_adv.h
  */
-#define CONFIGURATION_H_VERSION 020008
+#define CONFIGURATION_H_VERSION 02000801
 
 //===========================================================================
 //============================= Getting Started =============================
@@ -113,7 +113,7 @@
 
 /**
  * Select a third serial port on the board to use for communication with the host.
- * Currently only supported for AVR, DUE and LPC1768
+ * Currently only supported for AVR, DUE, LPC1768/9 and STM32/STM32F1
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
 //#define SERIAL_PORT_3 1
@@ -507,22 +507,22 @@
 
 #if ENABLED(PIDTEMP)
   //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
-  //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
+  #define PID_AUTOTUNE_MENU       // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
   //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
-  // ANET A8 Standard Extruder at 210 Degree Celsius and 100% Fan
-  // (measured after M106 S255 with M303 E0 S210 C8)
+  // Aibecy ANET A8 Hotend at 200 Degree Celsius and 50% Fan
+  // (measured with PID Autotune menu)
   #if ENABLED(PID_PARAMS_PER_HOTEND)
     // Specify between 1 and HOTENDS values per array.
     // If fewer than EXTRUDER values are provided, the last element will be repeated.
-    #define DEFAULT_Kp_LIST {  21.00,  20.00 }
-    #define DEFAULT_Ki_LIST {   1.25,   1.25 }
-    #define DEFAULT_Kd_LIST {  86.00,  86.00 }
+    #define DEFAULT_Kp_LIST {  39.10,  39.10 }
+    #define DEFAULT_Ki_LIST {   3.31,   3.31 }
+    #define DEFAULT_Kd_LIST { 115.32, 115.32 }
   #else
-    #define DEFAULT_Kp  21.00
-    #define DEFAULT_Ki   1.25
-    #define DEFAULT_Kd  86.00
+    #define DEFAULT_Kp  39.10
+    #define DEFAULT_Ki   3.31
+    #define DEFAULT_Kd 115.32
   #endif
 #endif // PIDTEMP
 
@@ -543,9 +543,9 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
-#define BED_LIMIT_SWITCHING
+//#define BED_LIMIT_SWITCHING
 
 /**
  * Max Bed Power
@@ -559,11 +559,11 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
-  // ANET A8
-  // original Bed + 0.3mm Heat conducting into 4mm borosilicate (PID-Autotune: M303 E-1 S60 C5):
-  #define DEFAULT_bedKp 295.00
-  #define DEFAULT_bedKi 35.65
-  #define DEFAULT_bedKd 610.21
+  // ANET A8 original Bed with generic self adhesive build surface at 50 Degree Celsius
+  // (measured with PID Autotune menu)
+  #define DEFAULT_bedKp  90.20
+  #define DEFAULT_bedKi  11.35
+  #define DEFAULT_bedKd 477.83
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
@@ -893,7 +893,7 @@
  *
  * See https://github.com/synthetos/TinyG/wiki/Jerk-Controlled-Motion-Explained
  */
-//#define S_CURVE_ACCELERATION
+#define S_CURVE_ACCELERATION
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -2587,7 +2587,7 @@
 //#define DWIN_CREALITY_LCD
 
 //
-// ADS7843/XPT2046 ADC Touchscreen such as ILI9341 2.8
+// Touch Screen Settings
 //
 //#define TOUCH_SCREEN
 #if ENABLED(TOUCH_SCREEN)
