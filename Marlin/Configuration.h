@@ -422,7 +422,7 @@
  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  */
-#define TEMP_SENSOR_0 5
+#define TEMP_SENSOR_0 11
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -516,18 +516,18 @@
   //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
-  // Aibecy ANET A8 Hotend at 200 Degree Celsius and 50% Fan
+  // AFUNTA Heater Cartridge at 200 Degree Celsius and 50% Fan
   // (measured with PID Autotune menu)
   #if ENABLED(PID_PARAMS_PER_HOTEND)
     // Specify between 1 and HOTENDS values per array.
     // If fewer than EXTRUDER values are provided, the last element will be repeated.
-    #define DEFAULT_Kp_LIST {  39.10,  39.10 }
-    #define DEFAULT_Ki_LIST {   3.31,   3.31 }
-    #define DEFAULT_Kd_LIST { 115.32, 115.32 }
+    #define DEFAULT_Kp_LIST { 16.9652, 16.9652 }
+    #define DEFAULT_Ki_LIST {  0.8599,  0.8599 }
+    #define DEFAULT_Kd_LIST { 83.6785, 83.6785 }
   #else
-    #define DEFAULT_Kp  39.10
-    #define DEFAULT_Ki   3.31
-    #define DEFAULT_Kd 115.32
+    #define DEFAULT_Kp 16.9652
+    #define DEFAULT_Ki  0.8599
+    #define DEFAULT_Kd 83.6785
   #endif
 #endif // PIDTEMP
 
