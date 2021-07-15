@@ -597,18 +597,18 @@
   //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
-  // AFUNTA Heater Cartridge at 200 Degree Celsius and 50% Fan
+  // AFUNTA Heater Cartridge at 220 Degree Celsius and 50% Fan
   // (measured with PID Autotune menu)
   #if ENABLED(PID_PARAMS_PER_HOTEND)
     // Specify between 1 and HOTENDS values per array.
     // If fewer than EXTRUDER values are provided, the last element will be repeated.
-    #define DEFAULT_Kp_LIST { 16.9652, 16.9652 }
-    #define DEFAULT_Ki_LIST {  0.8599,  0.8599 }
-    #define DEFAULT_Kd_LIST { 83.6785, 83.6785 }
+    #define DEFAULT_Kp_LIST { 22.3726, 22.3726 }
+    #define DEFAULT_Ki_LIST {  1.3412,  1.3412 }
+    #define DEFAULT_Kd_LIST { 93.3022, 93.3022 }
   #else
-    #define DEFAULT_Kp 16.9652
-    #define DEFAULT_Ki  0.8599
-    #define DEFAULT_Kd 83.6785
+    #define DEFAULT_Kp 22.3726
+    #define DEFAULT_Ki  1.3412
+    #define DEFAULT_Kd 93.3022
   #endif
 #endif // PIDTEMP
 
@@ -645,11 +645,11 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
-  // ANET A8 original Bed with self adhesive build surface, glass and foil insulation at 50 Degree Celsius
+  // ANET A8 original Bed with self adhesive build surface, glass and foil insulation at 70 Degree Celsius
   // (measured with PID Autotune menu)
-  #define DEFAULT_bedKp 109.60
-  #define DEFAULT_bedKi  16.21
-  #define DEFAULT_bedKd 494.06
+  #define DEFAULT_bedKp 223.2334
+  #define DEFAULT_bedKi  38.0263
+  #define DEFAULT_bedKd 873.6611
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
@@ -1174,7 +1174,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { -22, -36, -0.5 }
+#define NOZZLE_TO_PROBE_OFFSET { -22, -36, -1.275 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
