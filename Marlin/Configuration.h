@@ -593,18 +593,18 @@
   //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
-  // AFUNTA Heater Cartridge at 220 Degree Celsius and 50% Fan
+  // AFUNTA Heater Cartridge at 230 Degree Celsius and 50% Fan
   // (measured with PID Autotune menu)
   #if ENABLED(PID_PARAMS_PER_HOTEND)
     // Specify between 1 and HOTENDS values per array.
     // If fewer than EXTRUDER values are provided, the last element will be repeated.
-    #define DEFAULT_Kp_LIST { 22.3726, 22.3726 }
-    #define DEFAULT_Ki_LIST {  1.3412,  1.3412 }
-    #define DEFAULT_Kd_LIST { 93.3022, 93.3022 }
+    #define DEFAULT_Kp_LIST { 19.3532, 19.3532 }
+    #define DEFAULT_Ki_LIST {  1.1057,  1.1057 }
+    #define DEFAULT_Kd_LIST { 84.6825, 84.6825 }
   #else
-    #define DEFAULT_Kp 22.3726
-    #define DEFAULT_Ki  1.3412
-    #define DEFAULT_Kd 93.3022
+    #define DEFAULT_Kp 19.3532
+    #define DEFAULT_Ki  1.1057
+    #define DEFAULT_Kd 84.6825
   #endif
 #endif // PIDTEMP
 
@@ -643,9 +643,9 @@
 
   // ANET A8 original Bed with self adhesive build surface, glass and foil insulation at 70 Degree Celsius
   // (measured with PID Autotune menu)
-  #define DEFAULT_bedKp 223.2334
-  #define DEFAULT_bedKi  38.0263
-  #define DEFAULT_bedKd 873.6611
+  #define DEFAULT_bedKp 236.5893
+  #define DEFAULT_bedKi  45.2326
+  #define DEFAULT_bedKd 824.9868
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
