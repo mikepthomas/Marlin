@@ -421,6 +421,11 @@
   #endif
 #endif
 
+#if EITHER(HAS_DWIN_E3V2, IS_DWIN_MARLINUI)
+  #define HAS_LCD_BRIGHTNESS 1
+  #define MAX_LCD_BRIGHTNESS 31
+#endif
+
 /**
  * Override the SD_DETECT_STATE set in Configuration_adv.h
  * and enable sharing of onboard SD host drives (all platforms but AGCM4)
@@ -461,7 +466,7 @@
 
 #endif
 
-#if ANY(HAS_GRAPHICAL_TFT, LCD_USE_DMA_FSMC, HAS_FSMC_GRAPHICAL_TFT, HAS_SPI_GRAPHICAL_TFT) || !PIN_EXISTS(SD_DETECT)
+#if ANY(HAS_GRAPHICAL_TFT, LCD_USE_DMA_FSMC, HAS_FSMC_GRAPHICAL_TFT, HAS_SPI_GRAPHICAL_TFT, IS_DWIN_MARLINUI) || !PIN_EXISTS(SD_DETECT)
   #define NO_LCD_REINIT 1  // Suppress LCD re-initialization
 #endif
 
@@ -755,13 +760,13 @@
   // to select a USER library for MAX6675, MAX31855, MAX31865
   //
   #if BOTH(HAS_MAX6675, LIB_MAX6675)
-    #define LIB_USR_MAX6675 1
+    #define USE_LIB_MAX6675 1
   #endif
   #if BOTH(HAS_MAX31855, LIB_MAX31855)
-    #define LIB_USR_MAX31855 1
+    #define USE_ADAFRUIT_MAX31855 1
   #endif
   #if BOTH(HAS_MAX31865, LIB_MAX31865)
-    #define LIB_USR_MAX31865 1
+    #define USE_ADAFRUIT_MAX31865 1
   #elif HAS_MAX31865
     #define LIB_INTERNAL_MAX31865 1
   #endif
@@ -2005,7 +2010,7 @@
   #define HAS_TMC_SW_SERIAL 1
 #endif
 
-#if !USE_SENSORLESS
+#if DISABLED(SENSORLESS_HOMING)
   #undef SENSORLESS_BACKOFF_MM
 #endif
 
@@ -2122,83 +2127,78 @@
 #define IS_Z4_ENDSTOP(A,M) (ENABLED(Z_MULTI_ENDSTOPS) && NUM_Z_STEPPER_DRIVERS >= 4 && Z4_USE_ENDSTOP == _##A##M##_)
 
 #define _HAS_STOP(A,M) (PIN_EXISTS(A##_##M) && !IS_PROBE_PIN(A,M) && !IS_X2_ENDSTOP(A,M) && !IS_Y2_ENDSTOP(A,M) && !IS_Z2_ENDSTOP(A,M) && !IS_Z3_ENDSTOP(A,M) && !IS_Z4_ENDSTOP(A,M))
-#if BOTH(X_HOME_TO_MIN, USE_XMIN_PLUG) && _HAS_STOP(X,MIN)
+#if _HAS_STOP(X,MIN)
   #define HAS_X_MIN 1
 #endif
-#if (BOTH(X_HOME_TO_MAX, USE_XMAX_PLUG) || ENABLED(DUAL_X_CARRIAGE)) && _HAS_STOP(X,MAX)
+#if _HAS_STOP(X,MAX)
   #define HAS_X_MAX 1
 #endif
-#if ALL(HAS_Y_AXIS, Y_HOME_TO_MIN, USE_YMIN_PLUG) && _HAS_STOP(Y,MIN)
+#if _HAS_STOP(Y,MIN)
   #define HAS_Y_MIN 1
 #endif
-#if ALL(HAS_Y_AXIS, Y_HOME_TO_MAX, USE_YMAX_PLUG) && _HAS_STOP(Y,MAX)
+#if _HAS_STOP(Y,MAX)
   #define HAS_Y_MAX 1
 #endif
-#if BOTH(HAS_Z_AXIS, USE_ZMIN_PLUG) && _HAS_STOP(Z,MIN)
+#if _HAS_STOP(Z,MIN)
   #define HAS_Z_MIN 1
 #endif
-#if ALL(HAS_Z_AXIS, Z_HOME_TO_MAX, USE_ZMAX_PLUG) && _HAS_STOP(Z,MAX)
+#if _HAS_STOP(Z,MAX)
   #define HAS_Z_MAX 1
 #endif
-#if LINEAR_AXES >= 4 && BOTH(I_HOME_TO_MIN, USE_IMIN_PLUG) && _HAS_STOP(I,MIN)
+#if _HAS_STOP(I,MIN)
   #define HAS_I_MIN 1
 #endif
-#if LINEAR_AXES >= 4 && BOTH(I_HOME_TO_MAX, USE_IMAX_PLUG) && _HAS_STOP(I,MAX)
+#if _HAS_STOP(I,MAX)
   #define HAS_I_MAX 1
 #endif
-#if LINEAR_AXES >= 5 && BOTH(J_HOME_TO_MIN, USE_JMIN_PLUG) && _HAS_STOP(J,MIN)
+#if _HAS_STOP(J,MIN)
   #define HAS_J_MIN 1
 #endif
-#if LINEAR_AXES >= 5 && BOTH(J_HOME_TO_MAX, USE_JMAX_PLUG) && _HAS_STOP(J,MAX)
+#if _HAS_STOP(J,MAX)
   #define HAS_J_MAX 1
 #endif
-#if LINEAR_AXES >= 6 && BOTH(K_HOME_TO_MIN, USE_KMIN_PLUG) && _HAS_STOP(K,MIN)
+#if _HAS_STOP(K,MIN)
   #define HAS_K_MIN 1
 #endif
-#if LINEAR_AXES >= 6 && BOTH(K_HOME_TO_MAX, USE_KMAX_PLUG) && _HAS_STOP(K,MAX)
+#if _HAS_STOP(K,MAX)
   #define HAS_K_MAX 1
 #endif
-#if BOTH(X_HOME_TO_MIN, X_DUAL_ENDSTOPS) && PIN_EXISTS(X2_MIN)
+#if PIN_EXISTS(X2_MIN)
   #define HAS_X2_MIN 1
 #endif
-#if BOTH(X_HOME_TO_MAX, X_DUAL_ENDSTOPS) && PIN_EXISTS(X2_MAX)
+#if PIN_EXISTS(X2_MAX)
   #define HAS_X2_MAX 1
 #endif
-#if BOTH(Y_HOME_TO_MIN, Y_DUAL_ENDSTOPS) && PIN_EXISTS(Y2_MIN)
+#if PIN_EXISTS(Y2_MIN)
   #define HAS_Y2_MIN 1
 #endif
-#if BOTH(Y_HOME_TO_MAX, Y_DUAL_ENDSTOPS) && PIN_EXISTS(Y2_MAX)
+#if PIN_EXISTS(Y2_MAX)
   #define HAS_Y2_MAX 1
 #endif
-#if ENABLED(Z_MULTI_ENDSTOPS)
-  #if Z_HOME_TO_MIN && PIN_EXISTS(Z2_MIN)
-    #define HAS_Z2_MIN 1
-  #endif
-  #if Z_HOME_TO_MAX && PIN_EXISTS(Z2_MAX)
-    #define HAS_Z2_MAX 1
-  #endif
-  #if NUM_Z_STEPPER_DRIVERS >= 3
-    #if Z_HOME_TO_MIN && PIN_EXISTS(Z3_MIN)
-      #define HAS_Z3_MIN 1
-    #endif
-    #if Z_HOME_TO_MAX && PIN_EXISTS(Z3_MAX)
-      #define HAS_Z3_MAX 1
-    #endif
-    #if NUM_Z_STEPPER_DRIVERS >= 4
-      #if Z_HOME_TO_MIN && PIN_EXISTS(Z4_MIN)
-        #define HAS_Z4_MIN 1
-      #endif
-      #if Z_HOME_TO_MAX && PIN_EXISTS(Z4_MAX)
-        #define HAS_Z4_MAX 1
-      #endif
-    #endif
-  #endif
+#if PIN_EXISTS(Z2_MIN)
+  #define HAS_Z2_MIN 1
+#endif
+#if PIN_EXISTS(Z2_MAX)
+  #define HAS_Z2_MAX 1
+#endif
+#if PIN_EXISTS(Z3_MIN)
+  #define HAS_Z3_MIN 1
+#endif
+#if PIN_EXISTS(Z3_MAX)
+  #define HAS_Z3_MAX 1
+#endif
+#if PIN_EXISTS(Z4_MIN)
+  #define HAS_Z4_MIN 1
+#endif
+#if PIN_EXISTS(Z4_MAX)
+  #define HAS_Z4_MAX 1
 #endif
 
 #if HAS_BED_PROBE && PIN_EXISTS(Z_MIN_PROBE)
   #define HAS_Z_MIN_PROBE_PIN 1
 #endif
 
+#undef _HAS_STOP
 #undef IS_PROBE_PIN
 #undef IS_X2_ENDSTOP
 #undef IS_Y2_ENDSTOP
@@ -2594,9 +2594,14 @@
 #endif
 #if NUM_SERVOS > 0
   #define HAS_SERVOS 1
-#endif
-#if HAS_SERVOS && defined(PAUSE_SERVO_OUTPUT) && defined(RESUME_SERVO_OUTPUT)
-  #define HAS_PAUSE_SERVO_OUTPUT 1
+  #if defined(PAUSE_SERVO_OUTPUT) && defined(RESUME_SERVO_OUTPUT)
+    #define HAS_PAUSE_SERVO_OUTPUT 1
+  #endif
+#else
+  #undef SERVO_DELAY
+  #undef DEACTIVATE_SERVOS_AFTER_MOVE
+  #undef EDITABLE_SERVO_ANGLES
+  #undef SERVO_DETACH_GCODE
 #endif
 
 // Sensors
@@ -2833,7 +2838,7 @@
   #define HAS_TEMPERATURE 1
 #endif
 
-#if HAS_TEMPERATURE && EITHER(HAS_LCD_MENU, DWIN_CREALITY_LCD)
+#if HAS_TEMPERATURE && EITHER(HAS_LCD_MENU, HAS_DWIN_E3V2)
   #ifdef PREHEAT_6_LABEL
     #define PREHEAT_COUNT 6
   #elif defined(PREHEAT_5_LABEL)
@@ -2867,15 +2872,17 @@
 /**
  * Bed Probe dependencies
  */
-#if HAS_BED_PROBE
-  #if BOTH(ENDSTOPPULLUPS, HAS_Z_MIN_PROBE_PIN)
-    #define ENDSTOPPULLUP_ZMIN_PROBE
-  #endif
+#if EITHER(MESH_BED_LEVELING, HAS_BED_PROBE)
   #ifndef Z_PROBE_OFFSET_RANGE_MIN
     #define Z_PROBE_OFFSET_RANGE_MIN -20
   #endif
   #ifndef Z_PROBE_OFFSET_RANGE_MAX
     #define Z_PROBE_OFFSET_RANGE_MAX 20
+  #endif
+#endif
+#if HAS_BED_PROBE
+  #if BOTH(ENDSTOPPULLUPS, HAS_Z_MIN_PROBE_PIN)
+    #define ENDSTOPPULLUP_ZMIN_PROBE
   #endif
   #ifndef XY_PROBE_FEEDRATE
     #define XY_PROBE_FEEDRATE ((homing_feedrate_mm_m.x + homing_feedrate_mm_m.y) / 2)
@@ -2937,10 +2944,9 @@
 #endif
 #if !BOTH(HAS_BED_PROBE, HAS_EXTRUDERS)
   #undef PROBING_ESTEPPERS_OFF
-#endif
-#if BOTH(PROBING_STEPPERS_OFF, PROBING_ESTEPPERS_OFF)
-  #undef PROBING_ESTEPPERS_OFF
-  #warning "PROBING_STEPPERS_OFF includes PROBING_ESTEPPERS_OFF. Disabling PROBING_ESTEPPERS_OFF."
+#elif ENABLED(PROBING_STEPPERS_OFF)
+  // PROBING_STEPPERS_OFF implies PROBING_ESTEPPERS_OFF, make sure it is defined
+  #define PROBING_ESTEPPERS_OFF
 #endif
 #if EITHER(ADVANCED_PAUSE_FEATURE, PROBING_HEATERS_OFF)
   #define HEATER_IDLE_HANDLER 1
@@ -2953,7 +2959,7 @@
  * Advanced Pause - Filament Change
  */
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #if EITHER(HAS_LCD_MENU, EXTENSIBLE_UI) || BOTH(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
+  #if ANY(HAS_LCD_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_ENHANCED, DWIN_CREALITY_LCD_JYERSUI) || BOTH(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
     #define M600_PURGE_MORE_RESUMABLE 1
   #endif
   #ifndef FILAMENT_CHANGE_SLOW_LOAD_LENGTH
@@ -3209,7 +3215,7 @@
 #endif
 
 // Number of VFAT entries used. Each entry has 13 UTF-16 characters
-#if EITHER(SCROLL_LONG_FILENAMES, DWIN_CREALITY_LCD)
+#if EITHER(SCROLL_LONG_FILENAMES, HAS_DWIN_E3V2)
   #define MAX_VFAT_ENTRIES (5)
 #else
   #define MAX_VFAT_ENTRIES (2)
@@ -3264,6 +3270,8 @@
   #ifndef LCD_WIDTH
     #if HAS_MARLINUI_U8GLIB
       #define LCD_WIDTH 21
+    #elif IS_DWIN_MARLINUI
+      // Defined by header
     #else
       #define LCD_WIDTH TERN(IS_ULTIPANEL, 20, 16)
     #endif
@@ -3271,6 +3279,8 @@
   #ifndef LCD_HEIGHT
     #if HAS_MARLINUI_U8GLIB
       #define LCD_HEIGHT 5
+    #elif IS_DWIN_MARLINUI
+      // Defined by header
     #else
       #define LCD_HEIGHT TERN(IS_ULTIPANEL, 4, 2)
     #endif
