@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2021 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -21,21 +21,20 @@
  */
 #pragma once
 
-/**
- * feature/z_stepper_align.h
- */
+#include "../inc/MarlinConfigPre.h"
 
-#include "../inc/MarlinConfig.h"
+typedef float xatc_array_t[XATC_MAX_POINTS];
 
-class ZStepperAlign {
-  public:
-    static xy_pos_t xy[NUM_Z_STEPPER_DRIVERS];
+class XATC {
+  static bool enabled;
+public:
+  static float spacing, start;
+  static xatc_array_t z_offset;
 
-    #if HAS_Z_STEPPER_ALIGN_STEPPER_XY
-      static xy_pos_t stepper_xy[NUM_Z_STEPPER_DRIVERS];
-    #endif
-
-  static void reset_to_default();
+  static void reset();
+  static void set_enabled(const bool ena) { enabled = ena; }
+  static float compensation(const xy_pos_t &raw);
+  static void print_points();
 };
 
-extern ZStepperAlign z_stepper_align;
+extern XATC xatc;
